@@ -8,14 +8,12 @@
 
 <body>
     <form id="gifs-form">
-        <label for="tv-input">Add your favorite TV show</label>
+        <label for="tv-input">TV show gifs!</label>
         <input type="text" id="tv-input">
+        <input id="yourInput" type="submit" value="Add your favorite TV show">
+
         <br>
         <div id="buttons-view"></div>
-        <!-- these buttons will eventually be removed -->
-        <button data-show="good place">good place</button>
-        <button data-show="community">community</button>
-        <button data-show="vice principals">Vice Principals</button>
         <div id="gifs">
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -37,15 +35,16 @@
             }
 
             // TV show buttons
-            $("#tv-input").on("click", function (event) {
+            $("yourInput").on("click", function (event) {
                 event.preventDefault();
                 var newShow = $("#tv-input").val().trim();
                 topics.push(newShow);
-
-                // Call renderButtons
-                renderButtons();
-
             });
+
+            // render the buttons
+            renderButtons();
+
+console.log(topics);
             // Event listener 
             $("button").on("click", function () {
                 var show = $(this).attr("data-show");
@@ -54,7 +53,7 @@
                 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
                     show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
                 console.log(queryURL);
-
+console.log(show);
                 // AJAX GET
                 $.ajax({
                     url: queryURL,
@@ -82,8 +81,6 @@
                             $("#gifs").append(p);
                         }
                     });
-
-
             });
         </script>
 </body>
