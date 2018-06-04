@@ -2,59 +2,90 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>GifTastic</title>
+    <meta charset="utf-8">
+    <title>GifTastic</title>
 </head>
 
 <body>
-  <button data-show="good place">good place</button>
-  <button data-show="community">community</button>
-  <button data-show="parks and rec">parks and rec</button>
-  <div id="gifs">
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
+    <form id="gifs-form">
+        <label for="tv-input">Add your favorite TV show</label>
+        <input type="text" id="tv-input">
+        <br>
+        <div id="buttons-view"></div>
+        <!-- these buttons will eventually be removed -->
+        <button data-show="good place">good place</button>
+        <button data-show="community">community</button>
+        <button data-show="vice principals">Vice Principals</button>
+        <div id="gifs">
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
 
-  var topics = ["good place", "community", "30 rock", "parks and rec", "the office", "brooklyn nine nine", "vice principals", "crazy ex girlfriend", "freaks and geeks"];
-    // Event listener 
-    $("button").on("click", function() {
-        var show = $(this).attr("data-show");
+            var topics = ["good place", "community", "30 rock", "parks and rec", "the office", "brooklyn nine nine", "vice principals", "crazy ex girlfriend", "freaks and geeks"];
 
-      // giphy API
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
-console.log(queryURL);
+            function renderButtons() {
 
-      // AJAX GET
-      $.ajax({
-        url: queryURL,
-        method: "GET"
-      })
+                // Loop through array of shows
+                for (var i = 0; i < topics.length; i++) {
 
-      // After the data from the AJAX request comes back
-        .then(function(response) {
+                    var thisButton = $("<button>");
+                    // attribute, button label
+                    thisButton.attr("data-show", topics[i]);
+                    thisButton.text(topics[i]);
+                    $("#buttons-view").append(thisButton);
+                }
+            }
 
-        var results = response.data;
+            // TV show buttons
+            $("#tv-input").on("click", function (event) {
+                event.preventDefault();
+                var newShow = $("#tv-input").val().trim();
+                topics.push(newShow);
 
-        // For loop to grab 10 images
-        for (var i = 0; i < results.length; i++) {
-          var imageUrl = response.data[0].images.fixed_height_still.url;
-   
-          // image tags
-          var showImage = $("<img>");
-          showImage.attr("src", results[i].images.fixed_height_still.url);
-          showImage.attr("alt", "gif from the TV show " + show);
+                // Call renderButtons
+                renderButtons();
 
-          var p = $("<p>").text("gif rating: " + results[i].rating);
+            });
+            // Event listener 
+            $("button").on("click", function () {
+                var show = $(this).attr("data-show");
 
-          // Appending the image to the images div
-          $("#gifs").append(showImage);
-          $("#gifs").append(p);
-         } });
+                // giphy API
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                    show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
+                console.log(queryURL);
 
-         
-    });
-  </script>
+                // AJAX GET
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+
+                    // After the data from the AJAX request comes back
+                    .then(function (response) {
+
+                        var results = response.data;
+
+                        // For loop to grab 10 images
+                        for (var i = 0; i < results.length; i++) {
+                            var imageUrl = response.data[0].images.fixed_height.url;
+
+                            // image tags
+                            var showImage = $("<img>");
+                            showImage.attr("src", results[i].images.fixed_height.url);
+                            showImage.attr("alt", "gif from the TV show " + show);
+
+                            var p = $("<p>").text("gif rating: " + results[i].rating);
+
+                            // Appending the image to the images div
+                            $("#gifs").append(showImage);
+                            $("#gifs").append(p);
+                        }
+                    });
+
+
+            });
+        </script>
 </body>
 
 </html>
