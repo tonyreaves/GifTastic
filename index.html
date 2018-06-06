@@ -19,7 +19,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="text/javascript">
 
-            var topics = ["good place", "community", "30 rock", "parks and rec", "the office", "brooklyn nine nine", "vice principals", "crazy ex girlfriend", "freaks and geeks"];
+            var topics = ["good place", "community", "30 rock", "parks and rec", "the office", "brooklyn nine nine", "vice principals", "unbreakable kimmy schmidt", "bojack horseman"];
 
             function renderButtons() {
 
@@ -32,6 +32,49 @@
                     // attribute, button label
                     thisButton.attr("data-show", topics[i]);
                     thisButton.text(topics[i]);
+                    thisButton.addClass("gifButton");
+
+                    thisButton.on("click", function () {
+                        event.preventDefault();
+
+                        var show = $(this).attr("data-show");
+
+                        // giphy API
+                        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                            show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
+                        console.log(queryURL);
+
+                        console.log(show);
+                        // AJAX GET
+                        $.ajax({
+                            url: queryURL,
+                            method: "GET"
+                        })
+                            // After the data from the AJAX request comes back
+                            .then(function (response) {
+
+                                var results = response.data;
+
+                                // For loop to grab 10 images
+                                for (var i = 0; i < results.length; i++) {
+                                    var imageUrlStill = results[i].images.fixed_height_still.url;
+                                    var imageUrlAnimate = results[i].images.fixed_height.url;
+
+                                    // image tags
+                                    var showImage = $("<img>");
+                                    showImage.attr("src", results[i].images.fixed_height.url);
+                                    showImage.attr("alt", "gif from the TV show " + show);
+
+                                    var p = $("<p>").text("gif rating: " + results[i].rating);
+
+                                    // Appending the image to the images div
+                                    $("#gifs").prepend(showImage);
+                                    $("#gifs").prepend(p);
+                                }
+                            });
+
+                    });
+
                     $("#buttons-row").append(thisButton);
                 }
             }
@@ -45,47 +88,47 @@
                 renderButtons();
             });
 
-            // Event listener 
-            $("button").on("click", function () {
-                event.preventDefault();
+            // // Event listener 
+            // $(".gifButton").on("click", function () {
+            //     event.preventDefault();
 
-                var show = $(this).attr("data-show");
+            //     var show = $(this).attr("data-show");
 
-                // giphy API
-                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                    show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
-                console.log(queryURL);
+            //     // giphy API
+            //     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+            //         show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
+            //     console.log(queryURL);
 
-                console.log(show);
-                // AJAX GET
-                $.ajax({
-                    url: queryURL,
-                    method: "GET"
-                })
-                    // After the data from the AJAX request comes back
-                    .then(function (response) {
+            //     console.log(show);
+            //     // AJAX GET
+            //     $.ajax({
+            //         url: queryURL,
+            //         method: "GET"
+            //     })
+            //         // After the data from the AJAX request comes back
+            //         .then(function (response) {
 
-                        var results = response.data;
+            //             var results = response.data;
 
-                        // For loop to grab 10 images
-                        for (var i = 0; i < results.length; i++) {
-                            var imageUrl = response.data[0].images.fixed_height.url;
+            //             // For loop to grab 10 images
+            //             for (var i = 0; i < results.length; i++) {
+            //                 var imageUrl = response.data[0].images.fixed_height.url;
 
-                            // image tags
-                            var showImage = $("<img>");
-                            showImage.attr("src", results[i].images.fixed_height.url);
-                            showImage.attr("alt", "gif from the TV show " + show);
+            //                 // image tags
+            //                 var showImage = $("<img>");
+            //                 showImage.attr("src", results[i].images.fixed_height.url);
+            //                 showImage.attr("alt", "gif from the TV show " + show);
 
-                            var p = $("<p>").text("gif rating: " + results[i].rating);
+            //                 var p = $("<p>").text("gif rating: " + results[i].rating);
 
-                            // Appending the image to the images div
-                            $("#gifs").append(showImage);
-                            $("#gifs").append(p);
-                        }
-                    });
+            //                 // Appending the image to the images div
+            //                 $("#gifs").append(showImage);
+            //                 $("#gifs").append(p);
+            //             }
+            //         });
 
-            });
-            // render the buttons initialls
+            // });
+            // render the buttons initially
             renderButtons();
         </script>
 </body>
