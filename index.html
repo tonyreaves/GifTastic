@@ -4,121 +4,136 @@
 <head>
     <meta charset="utf-8">
     <title>GifTastic</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Anaheim" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="assets/style.css" rel="stylesheet">
-
 </head>
 
 <body>
-    <h1>Watch TV in gif form!</h1>
-    <form id="gifs-form">
-        <label for="tv-input">TV show gifs!</label>
-        <input type="text" id="tv-input">
-        <input id="yourInput" type="submit" value="Add your favorite TV show">
+    <header>
+        <h1>Watch TV in gif form!</h1>
+    </header>
 
-        <br>
-        <div id="buttons-row"></div>
-        <div id="gifs">
+
+    <br>
+    <div id="buttons-row"></div>
+    <div class="row">
+        <div id="gifs" class="col"></div>
+        <div>
+            <form id="gifs-form" class="col">
+                <input type="text" id="tv-input" class="btn btn-outline-success">
+                <input id="yourInput" type="submit" class="btn btn-outline-success" value="Add your favorite TV show">
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="text/javascript">
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
 
-            var topics = ["good place", "community", "30 rock", "parks and rec", "kroll show", "brooklyn nine nine", "vice principals", "broad city", "bojack horseman"];
+        var topics = ["The Good Place", "Vice Principals", "Brooklyn Nine Nine", "Community", "30 Rock", "Parks and Recreation", "Kroll Show", "Broad City", "Bojack Horseman", "Curb Your Enthusiasm",
+            "Rick and Morty"];
 
-            function renderButtons() {
+        function renderButtons() {
 
-                $("#buttons-row").empty();
+            $("#buttons-row").empty();
 
-                // Loop through array of shows
-                for (var i = 0; i < topics.length; i++) {
+            // Loop through array of shows
+            for (var i = 0; i < topics.length; i++) {
 
-                    var thisButton = $("<button>");
-                    // attribute, button label
-                    thisButton.attr("data-show", topics[i]);
-                    thisButton.text(topics[i]);
-                    thisButton.addClass("gifButton");
+                var thisButton = $("<button>");
+                // attribute, button label
+                thisButton.attr("data-show", topics[i]);
+                thisButton.text(topics[i]);
+                thisButton.addClass("gifButton");
+                thisButton.addClass("btn btn-outline-success");
 
-                    thisButton.on("click", function () {
-                        event.preventDefault();
+                thisButton.on("click", function () {
+                    event.preventDefault();
 
-                        var show = $(this).attr("data-show");
+                    var show = $(this).attr("data-show");
 
-                        // giphy API
-                        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                            show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
-                        console.log(queryURL);
+                    // giphy API
+                    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                        show + "&api_key=GDrp9yYXxOT08SiDuSbymTZKPxz747Yg&limit=10";
 
-                        console.log(show);
-                        // AJAX GET
-                        $.ajax({
-                            url: queryURL,
-                            method: "GET"
-                        })
-                            // After the data from the AJAX request comes back
-                            .then(function (response) {
+                    // AJAX GET
+                    $.ajax({
+                        url: queryURL,
+                        method: "GET"
+                    })
+                        // After the data from the AJAX request comes back
+                        .then(function (response) {
 
-                                var results = response.data;
+                            var results = response.data;
 
-                                // For loop to grab 10 images
-                                for (var i = 0; i < results.length; i++) {
+                            // For loop to grab 10 images
+                            for (var i = 0; i < results.length; i++) {
 
-                                    var imageUrlStill = results[i].images.fixed_height_still.url;
-                                    var imageUrlAnimate = results[i].images.fixed_height.url;
+                                var imageUrlStill = results[i].images.fixed_height_still.url;
+                                var imageUrlAnimate = results[i].images.fixed_height.url;
 
-                                    // image tags
-                                    var showImage = $("<img>");
-                                    showImage.attr("src", results[i].images.fixed_height_still.url);
-                                    showImage.attr("stillsrc", results[i].images.fixed_height_still.url);
-                                    showImage.attr("animatesrc", results[i].images.fixed_height.url);
-                                    showImage.attr("alt", "gif from the TV show " + show);
-                                    showImage.attr("data-state", "still");
-                                    showImage.attr("class", "gif");
+                                // image tags
+                                var showImage = $("<img>");
+                                showImage.attr("src", results[i].images.fixed_height_still.url);
+                                showImage.attr("stillsrc", results[i].images.fixed_height_still.url);
+                                showImage.attr("animatesrc", results[i].images.fixed_height.url);
+                                showImage.attr("alt", "gif from the TV show " + show);
+                                showImage.attr("data-state", "still");
+                                showImage.attr("class", "gif");
 
-                                    var p = $("<p>").text("gif rating: " + results[i].rating);
+                                //displays rating
+                                var p = $("<p>").text("gif rating: " + results[i].rating);
+                                var title = $("<p>").text("title: " + results[i].title);
+                                // var download = $("<a href = " + '"' + results[i].images.fixed_height.url + '"' + " download>" + "<button>" + "</a>").text(" Download");
+                                // download.attr("class", "btn btn-outline-success");
+                                // download.attr("<a href = >", '"' + results[i].images.fixed_height.url + '"' + 'download');
 
-                                    // Appending the image to the images div
+                                // Prepending the image to the div so new stuff comes up first
+                                $("#gifs").prepend(p);
+                                $("#gifs").prepend(title);
+                                $("#gifs").prepend("<br>");
+                                $("#gifs").prepend(showImage);
 
-                                    $("#gifs").prepend(p);
-                                    $("#gifs").prepend(showImage);
+                                $(".gif").on("click", function () {
 
+                                    var state = $(this).attr("data-state");
 
-                                    $(".gif").on("click", function () {
+                                    // Set data-state to animate, or to still
+                                    if (state === "still") {
+                                        $(this).attr("src", $(this).attr("animatesrc"));
+                                        $(this).attr("data-state", "animate");
+                                    }
+                                    else {
+                                        $(this).attr("src", $(this).attr("stillsrc"));
+                                        $(this).attr("data-state", "still");
+                                    }
 
-                                        var state = $(this).attr("data-state");
+                                })
+                            }
+                        });
 
-                                        // Then, set the image's data-state to animate
-                                        // Else set src to the data-still value
-                                        if (state === "still") {
-                                            $(this).attr("src", $(this).attr("animatesrc"));
-                                            $(this).attr("data-state", "animate");
-                                        }
-                                        else if (state === "animate") {
-                                            $(this).attr("src", $(this).attr("stillsrc"));
-                                            $(this).attr("data-state", "still");
-                                        }
+                });
 
-                                    })
-                                }
-                            });
-
-                    });
-
-                    $("#buttons-row").append(thisButton);
-                }
+                $("#buttons-row").append(thisButton);
             }
+        }
 
-            // TV show buttons event listener
-            $("#yourInput").on("click", function (event) {
-                event.preventDefault();
-                var newShow = $("#tv-input").val().trim();
-                topics.push(newShow);
-                console.log(topics);
-                renderButtons();
-            });
-
-            // render the buttons initially
+        // TV show buttons event listener
+        $("#yourInput").on("click", function (event) {
+            event.preventDefault();
+            var newShow = $("#tv-input").val().trim();
+            topics.push(newShow);
+            console.log(topics);
             renderButtons();
-        </script>
+        });
+
+        // render the buttons initially
+        renderButtons();
+    </script>
 </body>
 
 </html>
