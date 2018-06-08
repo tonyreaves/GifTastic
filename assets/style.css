@@ -1,3 +1,8 @@
 body {
 font-family: 'Anaheim', sans-serif;
 }
+
+#buttons-row {
+    background-color: black;
+    padding: 10px;
+}
