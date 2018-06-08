@@ -85,9 +85,11 @@
                                 showImage.attr("data-state", "still");
                                 showImage.attr("class", "gif");
 
-                                //displays rating
+                                //displays rating and title
                                 var p = $("<p>").text("gif rating: " + results[i].rating);
                                 var title = $("<p>").text("title: " + results[i].title);
+
+                                //download button 
                                 // var download = $("<a href = " + '"' + results[i].images.fixed_height.url + '"' + " download>" + "<button>" + "</a>").text(" Download");
                                 // download.attr("class", "btn btn-outline-success");
                                 // download.attr("<a href = >", '"' + results[i].images.fixed_height.url + '"' + 'download');
@@ -96,9 +98,11 @@
                                 $("#gifs").prepend(p);
                                 $("#gifs").prepend(title);
                                 $("#gifs").prepend("<br>");
+                                // $("#gifs").prepend(download);
+                                // $("#gifs").prepend("<br>");
                                 $("#gifs").prepend(showImage);
 
-                                $(".gif").on("click", function () {
+                                $(showImage).on("click", function () {
 
                                     var state = $(this).attr("data-state");
 
@@ -111,11 +115,9 @@
                                         $(this).attr("src", $(this).attr("stillsrc"));
                                         $(this).attr("data-state", "still");
                                     }
-
                                 })
                             }
                         });
-
                 });
 
                 $("#buttons-row").append(thisButton);
